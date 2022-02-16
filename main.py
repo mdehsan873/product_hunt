@@ -1,3 +1,4 @@
+import requests
 import requests as req
 from setuptools.namespaces import flatten
 
@@ -21,11 +22,22 @@ def no_up_vote(product):
         return 0
 
 
-def is_dead(response):
-    if response.status_code == 200:
+def is_dead(website):
+    time.sleep(5)
+    print(website)
+    headers = {'Authorization': "Bearer {}".format(constant.token)}
+    try:
+        requests.Session()
+        response = requests.get(website, headers=headers)
+        if response.status_code == 200:
+
+            return False
+        else:
+            return True
+    except requests.exceptions.MissingSchema:
         return False
-    else:
-        return True
+    except requests.exceptions.ConnectionError:
+        return False
 
 
 def product_hunt():
@@ -42,14 +54,19 @@ def product_hunt():
         no_up_vot = no_up_vote(post)
         product_link = post[constant.DISCUSSION_URL]
         product = req.get(post[constant.DISCUSSION_URL], constant.AGENT)
-        if is_dead(product):
-            try:
-                no_of_category.append(product_category(post))
-            except ValueError:
-                print('none')
-            data[constant.NAME] = name
-            product_link = post[constant.DISCUSSION_URL]
-            products.append({name, no_up_vot, product_link})
+        product_details = post[constant.MAKER]
+        print()
+        try:
+            if is_dead(product_details[0][constant.WEBSITE_URL]):
+                try:
+                    no_of_category.append(product_category(post))
+                except ValueError:
+                    print('none')
+                data[constant.NAME] = name
+                product_link = post[constant.DISCUSSION_URL]
+                products.append({name, no_up_vot, product_link})
+        except IndexError:
+            print('NO URL')
     products.sort()
     no_of_category = list(flatten(no_of_category))
     no_of_category = set(no_of_category)
