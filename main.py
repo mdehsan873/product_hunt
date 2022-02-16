@@ -25,7 +25,7 @@ def no_up_vote(product):
 def is_dead(website):
     time.sleep(5)
     print(website)
-    headers = {'Authorization': "Bearer {}".format(constant.token)}
+    headers = {'Authorization': "Bearer {}".format(constant.TOKEN)}
     try:
         requests.Session()
         response = requests.get(website, headers=headers)
@@ -41,7 +41,7 @@ def is_dead(website):
 
 
 def product_hunt():
-    headers = {'Authorization': "Bearer {}".format(constant.token)}
+    headers = {'Authorization': "Bearer {}".format(constant.TOKEN)}
     response = req.get(constant.PRODUCT_HUNT_BASE_URL, headers=headers).json()
 
     posts = response[constant.POST]
