@@ -8,3 +8,4 @@ VOTES_COUNT='votes_count'
 POST='posts'
 WEBSITE_URL='website_url'
 MAKER='makers'
+ISALIVE=200
