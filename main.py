@@ -26,7 +26,7 @@ def is_dead(website):
     print(website)
     headers = {'Authorization': "Bearer {}".format(constant.TOKEN)}
     try:
-        requests.Session()
+
         response = requests.get(website, headers=headers)
         if response.status_code is constant.ISALIVE:
             return False
