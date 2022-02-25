@@ -6,8 +6,12 @@ import constant
 
 
 def product_category(post):
+    # the every post is more than one topic
+
     print('product category')
+    # list of topics in post
     products = post[constant.TOPIC]
+    # list of category the post belong
     categories = [topic[constant.NAME] for topic in products]
     print(categories)
 
@@ -15,6 +19,7 @@ def product_category(post):
 
 
 def no_up_vote(post):
+    # first we try to get no of votes and return it if no entry available we will return 0
     try:
         return post[constant.VOTES_COUNT]
     except ValueError:
@@ -28,6 +33,7 @@ def is_dead(website):
     try:
 
         response = requests.get(website, headers=headers)
+        # check the product website id dead or not means if website status code is not 200 means its dead link
         if response.status_code is constant.ISALIVE:
             return False
         else:
@@ -41,13 +47,14 @@ def is_dead(website):
 def product_hunt():
     headers = {'Authorization': "Bearer {}".format(constant.TOKEN)}
     response = req.get(constant.PRODUCT_HUNT_BASE_URL, headers=headers).json()
-
+    # getting all post from API
     posts = response[constant.POST]
     data = {}
     products = []
     count_of_category = []
-    product_of_day=None
-    most_used_description={}
+    product_of_day = None
+    most_used_description = {}
+    # traversing each product to get the dead product
     for post in posts:
         name = post[constant.NAME]
         no_up_vot = no_up_vote(post)
@@ -59,6 +66,7 @@ def product_hunt():
 
         print(product_of_day)
         try:
+            # if dead product count try to get the link of the dead product
             if is_dead(product_details[0][constant.WEBSITE_URL]):
                 try:
                     count_of_category.append(product_category(post))
