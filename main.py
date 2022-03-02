@@ -60,27 +60,33 @@ def product_hunt():
     most_used_description = {}
     # traversing each product to get the dead post link
     for post in posts:
+        # getting the post name
         name = post[constant.NAME]
+        # getting no of upvotes the post has
         no_up_vot = no_up_vote(post)
-        product_link = post[constant.DISCUSSION_URL]
-        product = req.get(post[constant.DISCUSSION_URL], constant.AGENT)
-        product_details = post[constant.MAKER]
+        # post link discussion url
+        post_link = post[constant.DISCUSSION_URL]
+        # post details its contains the post website and authors details
+        post_details = post[constant.MAKER]
+        # it is first post means it is product of than we store it
         if product_of_day is None:
-            product_of_day = [name, no_up_vot, product_link, product_details]
+            product_of_day = [name, no_up_vot, post_link, post_details]
 
-        print(product_of_day)
+        # print(product_of_day)
         try:
             # if dead product count try to get the link of the dead product
-            if is_dead(product_details[0][constant.WEBSITE_URL]):
+            if is_dead(post_details[0][constant.WEBSITE_URL]):
+                # if post is dead we append the post category into count of category
                 try:
                     count_of_category.append(product_category(post))
                 except ValueError:
                     print('none')
-                data[constant.NAME] = name
-                product_link = post[constant.DISCUSSION_URL]
-                products.append({name, no_up_vot, product_link})
+
+                post_link = post_details[0][constant.WEBSITE_URL]
+                # append the name and no vote and post_link
+                products.append({name, no_up_vot, post_link})
         except IndexError:
-            print('NO URL')
+            print(None)
     products.sort()
     count_of_category = list(flatten(count_of_category))
     # Number of categories  of dead products link
