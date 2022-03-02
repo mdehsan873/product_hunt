@@ -6,8 +6,8 @@ import constant
 
 
 def product_category(post):
-    # the every post is more than one topic
-
+    # the every post is having more than one topic
+    # we need to take all categories
     print('product category')
     # list of topics in post
     products = post[constant.TOPIC]
@@ -29,6 +29,7 @@ def no_up_vote(post):
 def is_dead(website):
     time.sleep(5)
     print(website)
+    # headers for access the api by providing is Api token
     headers = {'Authorization': "Bearer {}".format(constant.TOKEN)}
     try:
 
@@ -38,13 +39,16 @@ def is_dead(website):
             return False
         else:
             return True
+    # When the schema is Missing return false because there is no link
     except requests.exceptions.MissingSchema:
         return False
+    # When the Connection error occurs return false
     except requests.exceptions.ConnectionError:
         return False
 
 
 def product_hunt():
+    # header for access the api by providing is Api token
     headers = {'Authorization': "Bearer {}".format(constant.TOKEN)}
     response = req.get(constant.PRODUCT_HUNT_BASE_URL, headers=headers).json()
     # getting all post from API
@@ -54,7 +58,7 @@ def product_hunt():
     count_of_category = []
     product_of_day = None
     most_used_description = {}
-    # traversing each product to get the dead product
+    # traversing each product to get the dead post link
     for post in posts:
         name = post[constant.NAME]
         no_up_vot = no_up_vote(post)
@@ -79,6 +83,7 @@ def product_hunt():
             print('NO URL')
     products.sort()
     count_of_category = list(flatten(count_of_category))
+    # Number of categories  of dead products link
     count_of_category = set(count_of_category)
     print(count_of_category)
     print(products)
