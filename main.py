@@ -17,14 +17,6 @@ def get_product_category(post):
     return categories
 
 
-def get_no_up_vote(post):
-    # first we try to get no of votes and return it if no entry available we will return 0
-    try:
-        return post[constant.VOTES_COUNT]
-    except ValueError:
-        return 0
-
-
 def is_dead(website):
     time.sleep(5)
     print(website)
@@ -43,10 +35,14 @@ def is_dead(website):
         return False
 
 
+# this function display the dead post with numbers of upvotes and link and name
+# this function display the number of dead post categories with their count
 def product_hunt():
     # header for access the api by providing is Api token
     headers = {'Authorization': "Bearer {}".format(constant.TOKEN)}
+
     response = req.get(constant.PRODUCT_HUNT_BASE_URL, headers=headers).json()
+
     # getting all post from API
     posts = response[constant.POST]
     data = {}
@@ -54,13 +50,14 @@ def product_hunt():
     count_of_category = []
     product_of_day = None
     most_used_description = {}
+
     # traversing each product to get the dead post link
     for post in posts:
         # getting the post name
         name = post[constant.NAME]
 
         # getting no of upvotes the post has
-        no_up_vote = get_no_up_vote(post)
+        no_up_vote = 0 if post[constant.VOTES_COUNT] is None else post[constant.VOTES_COUNT]
 
         # post link discussion url
         post_link = post[constant.DISCUSSION_URL]
@@ -69,7 +66,7 @@ def product_hunt():
         post_details = post[constant.MAKER]
 
         # it is first post means it is product of than we store it
-        if product_of_day is None:
+        if not product_of_day:
             product_of_day = [name, no_up_vote, post_link, post_details]
 
         # print(product_of_day)
@@ -84,9 +81,9 @@ def product_hunt():
                 products.append([name, no_up_vote, post_link])
         except IndexError:
             print(None)
-    print(products,end=" before sorting")
+    print(products, end=" before sorting")
     # sorting the products on bases of number of upvotes
-    products=sorted(products, key=lambda x: x[1])
+    products = sorted(products, key=lambda x: x[1])
     count_of_category = list(flatten(count_of_category))
     # Number of categories and its count of each type of dead products link
     no_of_categories = {}
