@@ -70,7 +70,7 @@ def product_hunt():
             product_of_day = [name, no_up_vote, post_link, post_details]
 
         # print(product_of_day)
-        try:
+        if len(post_details) >= 1:
             # if dead product count try to get the link of the dead product
             if is_dead(post_details[0][constant.WEBSITE_URL]):
                 # if post is dead we append the post category into count of category
@@ -79,15 +79,18 @@ def product_hunt():
                 post_link = post_details[0][constant.WEBSITE_URL]
                 # append the name and no vote and post_link
                 products.append([name, no_up_vote, post_link])
-        except IndexError:
+        else:
             print(None)
+
     print(products, end=" before sorting")
-    # sorting the products on bases of number of upvotes
-    products = sorted(products, key=lambda x: x[1])
+    # sorting the products on bases of number of upvote
+    products = sorted(products, key=lambda up_votes: up_votes[1])
     count_of_category = list(flatten(count_of_category))
+
     # Number of categories and its count of each type of dead products link
     no_of_categories = {}
     for category in count_of_category:
         no_of_categories[category] = no_of_categories.get(category, 0) + 1
+
     print(no_of_categories)
     print(products)
